@@ -9,6 +9,8 @@ import ua.solvd.psaq.page.InventoryPageBase;
 import ua.solvd.psaq.util.AuthUtil;
 import ua.solvd.psaq.util.CheckoutDataProvider;
 
+import java.util.List;
+
 public class CheckoutProxyTest extends BaseTest {
 
     @Test
@@ -27,6 +29,27 @@ public class CheckoutProxyTest extends BaseTest {
                 .clickFinishButton();
         String actualCompleteMessage = checkoutCompletePage.getCompleteMessage();
         Assert.assertEquals(actualCompleteMessage, Constants.SUCCESS_ORDER_MESSAGE,
+                "The successful order message does not match expected.");
+    }
+
+    @Test
+    public void testProductSelectionWithLambdas() {
+        AuthUtil.loginViaCookie(getDriver());
+        InventoryPageBase inventoryPage = initPage(getDriver(), InventoryPageBase.class);
+        inventoryPage.open();
+        Assert.assertTrue(inventoryPage.isPageOpened(), "Inventory page was not opened.");
+        List<String> productNames = inventoryPage.getProductNames();
+        Assert.assertFalse(productNames.isEmpty(), "Product list is empty!");
+        String targetProduct = productNames.get(Constants.PRODUCT_QUANTITY);
+        CheckoutData checkoutData = CheckoutDataProvider.getDefaultCheckoutData();
+        CheckoutCompletePageBase checkoutCompletePage = inventoryPage
+                .clickAddToCartByProductName(targetProduct)
+                .getHeader()
+                .clickCartIcon()
+                .clickCheckoutButton()
+                .fillCheckoutInfo(checkoutData)
+                .clickFinishButton();
+        Assert.assertEquals(checkoutCompletePage.getCompleteMessage(), Constants.SUCCESS_ORDER_MESSAGE,
                 "The successful order message does not match expected.");
     }
 }
