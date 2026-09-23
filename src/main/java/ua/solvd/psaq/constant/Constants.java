@@ -8,6 +8,7 @@ public final class Constants {
     public static final String DEFAULT_LAST_NAME = "Doe";
     public static final String DEFAULT_POSTAL_CODE = "79000";
     public static final String SUCCESS_ORDER_MESSAGE = "Thank you for your order!";
+    public static final Integer PRODUCT_QUANTITY = 1;
 
     private Constants() {
     }
